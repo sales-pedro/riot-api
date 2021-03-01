@@ -11,7 +11,7 @@ import cs from "./icons/cs.svg";
 import BlueTeamHeader from "./BlueTeamHeader";
 import RedTeamHeader from "./RedTeamHeader";
 
-const GamePage = () => {
+const Test = () => {
   const { linkDetails } = useParams();
 
   const [logSeconds, setSeconds] = useState(0);
@@ -49,7 +49,8 @@ const GamePage = () => {
 
   useEffect(() => {
     const time = DateOffset(-20000);
-    const month = time.getUTCMonth().toString().padStart(2, "0");
+    const year = time.getFullYear().toString();
+    const month = (time.getMonth() + 1).toString().padStart(2, "0");
     const days = time.getUTCDate().toString().padStart(2, "0");
     const hours = time.getUTCHours().toString().padStart(2, "0");
     const minutes = time.getUTCMinutes().toString().padStart(2, "0");
@@ -60,7 +61,7 @@ const GamePage = () => {
 
     const fetchGame = async () => {
       const response = await fetch(
-        `https://feed.lolesports.com/livestats/v1/window/${linkDetails}?startingTime=2021-03-${days}T${hours}:${minutes}:${seconds}.00Z`
+        `https://feed.lolesports.com/livestats/v1/window/${linkDetails}?startingTime=${year}-${month}-${days}T${hours}:${minutes}:${seconds}.00Z`
       );
       const game = await response.json();
       const blueTeamComp =
@@ -88,7 +89,7 @@ const GamePage = () => {
   }, [logSeconds]);
 
   return isLoading ? (
-    <div className="container mx-auto">O jogo ainda não começou</div>
+    <div className="container mx-auto">Carregando...</div>
   ) : (
     <>
       <table className="w-full text-center">
@@ -198,110 +199,107 @@ const GamePage = () => {
           </tr>
         </tbody>
       </table>
+      <div className=" flex m-auto ">
+        <div>
+          <table className=" text-left">
+            <tbody className="text-gray-600 dark:text-gray-100">
+              {blueTeamPlayersStats.map((blueTeam, blueTeamId) => {
+                return (
+                  <tr key={blueTeamId} className="bg-blue-50">
+                    <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
+                      <div className="sm:flex  flex-col">
+                        {blueTeam.currentHealth}/{blueTeam.maxHealth}
+                      </div>
+                    </td>
+                    <td className="sm:p-3 py-2 px-1 text-right border border-gray-300 dark:border-gray-800 ">
+                      <h2 className="text-center p-2">
+                        {blueTeamComp[blueTeamId].summonerName}
+                      </h2>
+                      <div className="grid grid-cols-2">
+                        <div className="px-3 w-auto h-auto relative">
+                          <img
+                            src={`https://ddragon.leagueoflegends.com/cdn/11.3.1/img/champion/${blueTeamComp[blueTeamId].championId}.png`}
+                            className="rounded-full w-12 h-12 m-auto"
+                          />
+                          <h2 className="absolute bottom-3 left-2 m-auto bg-blue-100 rounded-full border border-gray-300">
+                            {blueTeam.level}
+                          </h2>
+                        </div>
 
-      <table className="w-full text-left">
-        <thead>
-          <tr className="text-gray-400">
-            <th className="font-normal p-3 border border-gray-300 dark:border-gray-800">
-              Player
-            </th>
-            <th className="font-normal p-3 border border-gray-300 dark:border-gray-800">
-              Level
-            </th>
-            <th className="font-normal p-3 border border-gray-300 dark:border-gray-800 ">
-              <img src={gold} alt="Gold" className="w-6 m-auto" />
-            </th>
-            <th className="font-normal p-3 border border-gray-300 dark:border-gray-800">
-              <img src={kills} alt="KDA" className="w-6 m-auto" />
-            </th>
-            <th className="font-normal p-3 border border-gray-300 dark:border-gray-800 ">
-              <img src={cs} alt="Creep Score" className="w-6 m-auto" />
-            </th>
-            <th className="font-normal p-3 border border-gray-300 dark:border-gray-800 ">
-              Life
-            </th>
-          </tr>
-        </thead>
-        <tbody className="text-gray-600 dark:text-gray-100">
-          {blueTeamPlayersStats.map((blueTeam, blueTeamId) => {
-            return (
-              <tr key={blueTeamId} className="bg-blue-50">
-                <td className="sm:p-3 py-2 px-1 bg-blue-100 border border-gray-300 dark:border-gray-800">
-                  {blueTeamComp[blueTeamId].summonerName}
-                </td>
-                <td className="sm:p-3 py-2 px-1  border border-gray-300 dark:border-gray-800">
-                  <div className="px-3 relative">
-                    <img
-                      src={`https://ddragon.leagueoflegends.com/cdn/11.3.1/img/champion/${blueTeamComp[blueTeamId].championId}.png`}
-                      className="rounded-full w-12 h-12"
-                    />
-                    <h2 className="absolute bottom-0 left-0 bg-blue-100 rounded-full border border-gray-300">
-                      {blueTeam.level}
-                    </h2>
-                  </div>
-                </td>
-                <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800 ">
-                  <div className="flex items-center">{blueTeam.totalGold}</div>
-                </td>
-                <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800 ">
-                  <div>
-                    {" "}
-                    {blueTeam.kills}/{blueTeam.deaths}/{blueTeam.assists}
-                  </div>
-                </td>
-                <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
-                  <div className="sm:flex  flex-col">{blueTeam.creepScore}</div>
-                </td>
-                <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
-                  <div className="sm:flex  flex-col">
-                    {blueTeam.currentHealth}/{blueTeam.maxHealth}
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
+                        <div>
+                          <span className="flex">
+                            <img src={kills} alt="Gold" className="w-4 mr-2" />
+                            {blueTeam.kills}/{blueTeam.deaths}/
+                            {blueTeam.assists}
+                          </span>
+                          <span className="flex">
+                            <img src={cs} alt="Gold" className="w-4 mr-2" />
+                            {blueTeam.creepScore}
+                          </span>
+                          <span className="flex">
+                            <img src={gold} alt="Gold" className="w-4 mr-2" />
+                            {blueTeam.totalGold}
+                          </span>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <table className=" text-left">
+            <tbody className="text-gray-600 dark:text-gray-100">
+              {redTeamPlayersStats.map((redTeam, redTeamId) => {
+                return (
+                  <tr key={redTeamId} className="bg-red-50">
+                    <td className="sm:p-3 py-2 px-1 text-right border border-gray-300 dark:border-gray-800 ">
+                      <h2 className="text-center p-2">
+                        {redTeamComp[redTeamId].summonerName}
+                      </h2>
+                      <div className="grid grid-cols-2">
+                        <div>
+                          <span className="flex">
+                            {redTeam.kills}/{redTeam.deaths}/{redTeam.assists}{" "}
+                            <img src={kills} alt="Gold" className="w-4 ml-2" />
+                          </span>
+                          <span className="flex">
+                            {redTeam.creepScore}{" "}
+                            <img src={cs} alt="Gold" className="w-4 ml-2" />
+                          </span>
+                          <span className="flex">
+                            {redTeam.totalGold}{" "}
+                            <img src={gold} alt="Gold" className="w-4 ml-2" />
+                          </span>
+                        </div>
 
-          {redTeamPlayersStats.map((redTeam, redTeamId) => {
-            return (
-              <tr key={redTeamId} className=" bg-red-50">
-                <td className="sm:p-3 py-2 px-1 border border-gray-300 bg-red-100 dark:border-gray-800">
-                  <div className="flex items-center">
-                    {redTeamComp[redTeamId].summonerName}
-                  </div>
-                </td>
-                <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
-                  <div className="px-3 relative">
-                    <img
-                      src={`https://ddragon.leagueoflegends.com/cdn/11.3.1/img/champion/${redTeamComp[redTeamId].championId}.png`}
-                      className="rounded-full w-12 h-12"
-                    />
-                    <h2 className="absolute bottom-0 left-0 bg-red-100 rounded-full border border-gray-300">
-                      {redTeam.level}
-                    </h2>
-                  </div>
-                </td>
-                <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800 ">
-                  <div className="flex items-center">{redTeam.totalGold}</div>
-                </td>
-                <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800 ">
-                  <div>
-                    {redTeam.kills}/{redTeam.deaths}/{redTeam.assists}
-                  </div>
-                </td>
-                <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
-                  <div className="sm:flex  flex-col">{redTeam.creepScore}</div>
-                </td>
-                <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
-                  <div className="sm:flex  flex-col">
-                    {redTeam.currentHealth}/{redTeam.maxHealth}
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                        <div className="px-3 w-auto h-auto relative">
+                          <img
+                            src={`https://ddragon.leagueoflegends.com/cdn/11.3.1/img/champion/${redTeamComp[redTeamId].championId}.png`}
+                            className="rounded-full w-12 h-12 m-auto"
+                          />
+                          <h2 className="absolute bottom-3 right-2 m-auto bg-red-100 rounded-full border border-gray-300">
+                            {redTeam.level}
+                          </h2>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
+                      <div className="sm:flex  flex-col">
+                        {redTeam.currentHealth}/{redTeam.maxHealth}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </>
   );
 };
-export default GamePage;
+export default Test;
