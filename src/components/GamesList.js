@@ -52,7 +52,7 @@ const GamesList = () => {
               Red Side
             </th>
             <th className="font-normal px-3 pt-0 pb-3 border border-gray-300 dark:border-gray-800">
-              Horário
+              Horário (UTC Time)
             </th>
             <th className="font-normal px-3 pt-0 pb-3 border border-gray-300 dark:border-gray-800 ">
               Status
@@ -117,7 +117,7 @@ const GamesList = () => {
                   </td>
 
                   <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
-                    <div className="sm:flex hidden flex-col">
+                    <div className="sm:flex  flex-col">
                       {scheduleGames.state}
                     </div>
                   </td>

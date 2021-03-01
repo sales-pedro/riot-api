@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import BlueTeamHeader from "./BlueTeamHeader";
 
+import gold from "./icons/gold.svg";
+import inhibitor from "./icons/inhibitor.svg";
+import tower from "./icons/tower.svg";
+import baron from "./icons/baron.svg";
+import kills from "./icons/kills.svg";
+import cs from "./icons/cs.svg";
+
+import BlueTeamHeader from "./BlueTeamHeader";
 import RedTeamHeader from "./RedTeamHeader";
 
 const GamePage = () => {
@@ -42,7 +49,8 @@ const GamePage = () => {
 
   useEffect(() => {
     const time = DateOffset(-20000);
-
+    const month = time.getUTCMonth().toString().padStart(2, "0");
+    const days = time.getUTCDate().toString().padStart(2, "0");
     const hours = time.getUTCHours().toString().padStart(2, "0");
     const minutes = time.getUTCMinutes().toString().padStart(2, "0");
     const seconds =
@@ -52,7 +60,7 @@ const GamePage = () => {
 
     const fetchGame = async () => {
       const response = await fetch(
-        `https://feed.lolesports.com/livestats/v1/window/${linkDetails}?startingTime=2021-02-${time.getUTCDate()}T${hours}:${minutes}:${seconds}.00Z`
+        `https://feed.lolesports.com/livestats/v1/window/${linkDetails}?startingTime=2021-03-${days}T${hours}:${minutes}:${seconds}.00Z`
       );
       const game = await response.json();
       const blueTeamComp =
@@ -80,38 +88,40 @@ const GamePage = () => {
   }, [logSeconds]);
 
   return isLoading ? (
-    <div className="container mx-auto">Loading</div>
+    <div className="container mx-auto">O jogo ainda não começou</div>
   ) : (
     <>
-      <span>
-        <h2>Game state: {gameState}</h2>
-      </span>
-
-      <table className="w-full text-left">
+      <table className="w-full text-center">
         <thead>
           <tr className="text-gray-400">
-            <th className="font-normal px-3 pt-0 pb-3 border border-gray-300 dark:border-gray-800">
-              Teams
+            <th className="font-normal p-3  border border-gray-300 dark:border-gray-800">
+              {gameState === "in_game" ? (
+                <h2 className="bg-red-500 text-white m-auto w-16 h-auto p-3 rounded-lg">
+                  Live
+                </h2>
+              ) : (
+                <h2 className="bg-green-500 text-white m-auto w-24  h-auto p-3 rounded-lg">
+                  Finished
+                </h2>
+              )}
             </th>
-            <th className="font-normal px-3 pt-0 pb-3 border border-gray-300 dark:border-gray-800">
-              Winner
+
+            <th className="font-normal p-3   border border-gray-300 dark:border-gray-800">
+              <img src={gold} alt="Golds" className="w-6 m-auto" />
             </th>
-            <th className="font-normal px-3 pt-0 pb-3 border border-gray-300 dark:border-gray-800">
-              Gold
+            <th className="font-normal p-3   border border-gray-300 dark:border-gray-800">
+              <img src={inhibitor} alt="Inhibitors" className="w-6 m-auto" />
             </th>
-            <th className="font-normal px-3 pt-0 pb-3 border border-gray-300 dark:border-gray-800">
-              Inhibitors
+            <th className="font-normal p-3   border border-gray-300 dark:border-gray-800">
+              <img src={tower} alt="Towers" className="w-6 m-auto " />
             </th>
-            <th className="font-normal px-3 pt-0 pb-3 border border-gray-300 dark:border-gray-800">
-              Towers
+            <th className="font-normal p-3 border border-gray-300 dark:border-gray-800">
+              <img src={baron} alt="Barons" className="w-6 m-auto " />
             </th>
-            <th className="font-normal px-3 pt-0 pb-3 border border-gray-300 dark:border-gray-800">
-              Barons
+            <th className="font-normal p-3  border border-gray-300 dark:border-gray-800 ">
+              <img src={kills} alt="Kills" className="w-6 m-auto " />
             </th>
-            <th className="font-normal px-3 pt-0 pb-3 border border-gray-300 dark:border-gray-800 ">
-              Kills
-            </th>
-            <th className="font-normal px-3 pt-0 pb-3 border border-gray-300 dark:border-gray-800">
+            <th className="font-normal p-3   border border-gray-300 dark:border-gray-800">
               Dragons
             </th>
           </tr>
@@ -121,33 +131,31 @@ const GamePage = () => {
             <td className="sm:p-3 py-2 px-1 bg-blue-100 border border-gray-300 dark:border-gray-800">
               <BlueTeamHeader eventDetails={eventDetails} />
             </td>
+
             <td className="sm:p-3 py-2 px-1 bg-blue-50 border border-gray-300 dark:border-gray-800">
-              <div>!</div>
-            </td>
-            <td className="sm:p-3 py-2 px-1 bg-blue-50 border border-gray-300 dark:border-gray-800">
-              <div>{blueTeamStats.totalGold}</div>
+              {blueTeamStats.totalGold}
             </td>
             <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
-              <div className=" px-3">{blueTeamStats.inhibitors} </div>
+              {blueTeamStats.inhibitors}
             </td>
             <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800 md:table-cell ">
-              <div className="flex items-center">{blueTeamStats.towers}</div>
+              {blueTeamStats.towers}
             </td>
             <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800 ">
-              <div>{blueTeamStats.barons}</div>
+              <h2>{blueTeamStats.barons}</h2>
             </td>
             <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
-              <div className="flex items-center">
-                {blueTeamStats.totalKills}
-              </div>
+              {blueTeamStats.totalKills}
             </td>
             <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
               <div className="flex items-center">
                 {blueTeamStats.dragons.map((dragons, dragonsId) => {
                   return (
-                    <h2 key={dragonsId} className="mr-3 ">
-                      {dragons}
-                    </h2>
+                    <div key={dragonsId} className="mr-3 w-4">
+                      <img
+                        src={`https://res.cloudinary.com/djylnv4hc/image/upload/v1614556029/icons/${dragons}.svg`}
+                      />
+                    </div>
                   );
                 })}
               </div>
@@ -158,30 +166,30 @@ const GamePage = () => {
             <td className="sm:p-3 py-2 px-1 bg-red-100 border border-gray-300 dark:border-gray-800">
               <RedTeamHeader eventDetails={eventDetails} />
             </td>
+
             <td className="sm:p-3 py-2 px-1 bg-red-50 border border-gray-300 dark:border-gray-800">
-              <div>!</div>
-            </td>
-            <td className="sm:p-3 py-2 px-1 bg-red-50 border border-gray-300 dark:border-gray-800">
-              <div>{redTeamStats.totalGold}</div>
+              {redTeamStats.totalGold}
             </td>
             <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
-              <div className=" px-3">{redTeamStats.inhibitors} </div>
+              {redTeamStats.inhibitors}
             </td>
             <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800 md:table-cell ">
-              <div className="flex items-center">{redTeamStats.towers}</div>
+              {redTeamStats.towers}
             </td>
             <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800 ">
-              <div>{redTeamStats.barons}</div>
+              {redTeamStats.barons}
             </td>
             <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
-              <div className="flex items-center">{redTeamStats.totalKills}</div>
+              {redTeamStats.totalKills}
             </td>
             <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
               <div className="flex items-center">
                 {redTeamStats.dragons.map((dragons, dragonsId) => {
                   return (
-                    <div key={dragonsId} className="mr-3 ">
-                      {dragons}{" "}
+                    <div key={dragonsId} className="mr-3 w-4">
+                      <img
+                        src={`https://res.cloudinary.com/djylnv4hc/image/upload/v1614556029/icons/${dragons}.svg`}
+                      />
                     </div>
                   );
                 })}
@@ -194,22 +202,22 @@ const GamePage = () => {
       <table className="w-full text-left">
         <thead>
           <tr className="text-gray-400">
-            <th className="font-normal px-3 pt-0 pb-3 border border-gray-300 dark:border-gray-800">
+            <th className="font-normal p-3 border border-gray-300 dark:border-gray-800">
               Player
             </th>
-            <th className="font-normal px-3 pt-0 pb-3 border border-gray-300 dark:border-gray-800">
+            <th className="font-normal p-3 border border-gray-300 dark:border-gray-800">
               Level
             </th>
-            <th className="font-normal px-3 pt-0 pb-3 border border-gray-300 dark:border-gray-800 ">
-              Gold
+            <th className="font-normal p-3 border border-gray-300 dark:border-gray-800 ">
+              <img src={gold} alt="Gold" className="w-6 m-auto" />
             </th>
-            <th className="font-normal px-3 pt-0 pb-3 border border-gray-300 dark:border-gray-800">
-              KDA
+            <th className="font-normal p-3 border border-gray-300 dark:border-gray-800">
+              <img src={kills} alt="KDA" className="w-6 m-auto" />
             </th>
-            <th className="font-normal px-3 pt-0 pb-3 border border-gray-300 dark:border-gray-800 ">
-              CS
+            <th className="font-normal p-3 border border-gray-300 dark:border-gray-800 ">
+              <img src={cs} alt="Creep Score" className="w-6 m-auto" />
             </th>
-            <th className="font-normal px-3 pt-0 pb-3 border border-gray-300 dark:border-gray-800 ">
+            <th className="font-normal p-3 border border-gray-300 dark:border-gray-800 ">
               Life
             </th>
           </tr>
@@ -219,13 +227,18 @@ const GamePage = () => {
             return (
               <tr key={blueTeamId} className="bg-blue-50">
                 <td className="sm:p-3 py-2 px-1 bg-blue-100 border border-gray-300 dark:border-gray-800">
-                  <div className="flex items-center">
-                    {blueTeamComp[blueTeamId].summonerName} (
-                    {blueTeamComp[blueTeamId].championId})
-                  </div>
+                  {blueTeamComp[blueTeamId].summonerName}
                 </td>
-                <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
-                  <div className=" px-3">{blueTeam.level} </div>
+                <td className="sm:p-3 py-2 px-1  border border-gray-300 dark:border-gray-800">
+                  <div className="px-3 relative">
+                    <img
+                      src={`https://ddragon.leagueoflegends.com/cdn/11.3.1/img/champion/${blueTeamComp[blueTeamId].championId}.png`}
+                      className="rounded-full w-12 h-12"
+                    />
+                    <h2 className="absolute bottom-0 left-0 bg-blue-100 rounded-full border border-gray-300">
+                      {blueTeam.level}
+                    </h2>
+                  </div>
                 </td>
                 <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800 ">
                   <div className="flex items-center">{blueTeam.totalGold}</div>
@@ -253,12 +266,19 @@ const GamePage = () => {
               <tr key={redTeamId} className=" bg-red-50">
                 <td className="sm:p-3 py-2 px-1 border border-gray-300 bg-red-100 dark:border-gray-800">
                   <div className="flex items-center">
-                    {redTeamComp[redTeamId].summonerName} (
-                    {redTeamComp[redTeamId].championId})
+                    {redTeamComp[redTeamId].summonerName}
                   </div>
                 </td>
                 <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
-                  <div className=" px-3">{redTeam.level} </div>
+                  <div className="px-3 relative">
+                    <img
+                      src={`https://ddragon.leagueoflegends.com/cdn/11.3.1/img/champion/${redTeamComp[redTeamId].championId}.png`}
+                      className="rounded-full w-12 h-12"
+                    />
+                    <h2 className="absolute bottom-0 left-0 bg-red-100 rounded-full border border-gray-300">
+                      {redTeam.level}
+                    </h2>
+                  </div>
                 </td>
                 <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800 ">
                   <div className="flex items-center">{redTeam.totalGold}</div>

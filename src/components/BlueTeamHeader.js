@@ -22,6 +22,9 @@ const BlueTeamHeader = ({ eventDetails }) => {
 
     fetchEvent();
   }, []);
+
+  //<img src={`${blueTeam.image}`} className="w-12 h-12 m-auto" />
+
   return (
     <>
       <h2>{blueTeam.name}</h2>
