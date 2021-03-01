@@ -11,7 +11,7 @@ import cs from "./icons/cs.svg";
 import BlueTeamHeader from "./BlueTeamHeader";
 import RedTeamHeader from "./RedTeamHeader";
 
-const Test = () => {
+const GamePage = () => {
   const { linkDetails } = useParams();
 
   const [logSeconds, setSeconds] = useState(0);
@@ -302,4 +302,4 @@ const Test = () => {
     </>
   );
 };
-export default Test;
+export default GamePage;
