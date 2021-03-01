@@ -8,5 +8,3 @@ firebase.initializeApp({
   storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
   messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
 });
-
-console.log(firebase.app().options);
