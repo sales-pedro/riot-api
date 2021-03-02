@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from "react";
-
 import GameIdRouter from "./GameIdRouter";
+import Select from 'react-select'
 
 const GamesList = () => {
   const [isLoading, setLoading] = useState(true);
+  const [scheduleGames, setScheduleGames] = useState([]);
+  const [fetchedGames, setFetchedGames] = useState([]);
+
+  const selectValues = [
+    { value: 'completed', label: 'Completed' },
+    { value: 'inprogress', label: 'In Progress' },
+    { value: 'unstarted', label: 'Unstarted' },
+  ]
 
   useEffect(() => {
     const fetchSchedule = async () => {
@@ -20,41 +28,70 @@ const GamesList = () => {
 
       const scheduleGames = games.data.schedule.events;
       setScheduleGames(scheduleGames);
+      setFetchedGames(scheduleGames);
       setLoading(false);
     };
 
     fetchSchedule();
   }, []);
 
-  const [scheduleGames, setScheduleGames] = useState([]);
+  const formatLocaleTime = (date) => {
+    const options = {
+      year: '2-digit', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit',
+      timeZoneName: 'short',
+      hour12: false,
+    };
+
+    return Intl.DateTimeFormat('default', options).format(new Date(date));
+  }
+
+  const handleSelectChange = (selectedValues) => {
+    if (!selectedValues.length) {
+      setScheduleGames(fetchedGames);
+    } else {
+      const selectedOptionValues = selectedValues.map(({ value }) => value);
+      const filteredGames = fetchedGames.filter(({ state }) => selectedOptionValues.includes(state));
+
+      setScheduleGames(filteredGames);
+    }
+  }
 
   return isLoading ? (
     <div className="container mx-auto">Loading</div>
   ) : (
     <>
-      <span>
+      <div className="flex justify-between items-center mb-4">
         <h2>Games: </h2>
-      </span>
+        <div className="w-1/4 mr-4">
+          <Select
+            defaultValue={selectValues}
+            options={selectValues}
+            isMulti
+            onChange={handleSelectChange}
+          />
+        </div>
+      </div>
 
       <table className="w-full text-left">
         <thead>
           <tr className="text-gray-400">
-            <th className="font-normal px-3 pt-0 pb-3 border border-gray-300 dark:border-gray-800">
+            <th className="font-normal py-2 px-3 border border-gray-300 dark:border-gray-800">
               Link do jogo
             </th>
-            <th className="font-normal px-3 pt-0 pb-3 border border-gray-300 dark:border-gray-800">
+            <th className="font-normal py-2 px-3 border border-gray-300 dark:border-gray-800">
               Liga
             </th>
-            <th className="font-normal px-3 pt-0 pb-3 border border-gray-300 dark:border-gray-800">
+            <th className="font-normal py-2 px-3 border border-gray-300 dark:border-gray-800">
               Blue Side
             </th>
-            <th className="font-normal px-3 pt-0 pb-3 border border-gray-300 dark:border-gray-800">
+            <th className="font-normal py-2 px-3 border border-gray-300 dark:border-gray-800">
               Red Side
             </th>
-            <th className="font-normal px-3 pt-0 pb-3 border border-gray-300 dark:border-gray-800">
-              Horário (UTC Time)
+            <th className="font-normal py-2 px-3 border border-gray-300 dark:border-gray-800">
+              Horário
             </th>
-            <th className="font-normal px-3 pt-0 pb-3 border border-gray-300 dark:border-gray-800 ">
+            <th className="font-normal py-2 px-3 border border-gray-300 dark:border-gray-800 ">
               Status
             </th>
           </tr>
@@ -113,7 +150,7 @@ const GamesList = () => {
                     </div>
                   </td>
                   <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800 ">
-                    <div>{scheduleGames.startTime}</div>
+                    <div>{formatLocaleTime(scheduleGames.startTime)}</div>
                   </td>
 
                   <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
