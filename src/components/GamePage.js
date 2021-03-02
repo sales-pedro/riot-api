@@ -83,9 +83,6 @@ const GamePage = () => {
       setredTeamPlayersStats(redTeamPlayersStats);
       const eventDetails = game.esportsMatchId;
 
-      console.log("blueTeamPlayersStats", blueTeamPlayersStats);
-      console.log("redTeamPlayersStats", redTeamPlayersStats);
-
       setEventDetails(eventDetails);
     };
 
@@ -97,7 +94,6 @@ const GamePage = () => {
       const playerItems = game.frames[9].participants;
       setPlayerItems(playerItems);
       setLoading(false);
-      //console.log("fetchItems", game);
     };
 
     fetchGame();
