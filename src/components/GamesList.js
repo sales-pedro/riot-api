@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import GameIdRouter from "./GameIdRouter";
-import Select from 'react-select'
+import Select from "react-select";
 
 const GamesList = () => {
   const [isLoading, setLoading] = useState(true);
@@ -8,10 +8,10 @@ const GamesList = () => {
   const [fetchedGames, setFetchedGames] = useState([]);
 
   const selectValues = [
-    { value: 'completed', label: 'Completed' },
-    { value: 'inprogress', label: 'In Progress' },
-    { value: 'unstarted', label: 'Unstarted' },
-  ]
+    { value: "completed", label: "Completed" },
+    { value: "inProgress", label: "In Progress" },
+    { value: "unstarted", label: "Unstarted" },
+  ];
 
   useEffect(() => {
     const fetchSchedule = async () => {
@@ -37,25 +37,31 @@ const GamesList = () => {
 
   const formatLocaleTime = (date) => {
     const options = {
-      year: '2-digit', month: '2-digit', day: '2-digit',
-      hour: '2-digit', minute: '2-digit', second: '2-digit',
-      timeZoneName: 'short',
+      year: "2-digit",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      timeZoneName: "short",
       hour12: false,
     };
 
-    return Intl.DateTimeFormat('default', options).format(new Date(date));
-  }
+    return Intl.DateTimeFormat("default", options).format(new Date(date));
+  };
 
   const handleSelectChange = (selectedValues) => {
     if (!selectedValues.length) {
       setScheduleGames(fetchedGames);
     } else {
       const selectedOptionValues = selectedValues.map(({ value }) => value);
-      const filteredGames = fetchedGames.filter(({ state }) => selectedOptionValues.includes(state));
+      const filteredGames = fetchedGames.filter(({ state }) =>
+        selectedOptionValues.includes(state)
+      );
 
       setScheduleGames(filteredGames);
     }
-  }
+  };
 
   return isLoading ? (
     <div className="container mx-auto">Loading</div>

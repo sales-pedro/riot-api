@@ -7,6 +7,7 @@ import tower from "./icons/tower.svg";
 import baron from "./icons/baron.svg";
 import kills from "./icons/kills.svg";
 import cs from "./icons/cs.svg";
+import percent from "./icons/percent.svg";
 
 import BlueTeamHeader from "./BlueTeamHeader";
 import RedTeamHeader from "./RedTeamHeader";
@@ -216,7 +217,15 @@ const GamePage = () => {
           <table className=" text-left">
             <tbody className="text-gray-600 dark:text-gray-100">
               {blueTeamPlayersStats.map((blueTeam, blueTeamId) => {
-                return (
+                const healthBar =
+                  (blueTeam.currentHealth / blueTeam.maxHealth) * 100;
+
+                const blueDamage =
+                  playerItems[blueTeamId].championDamageShare * 100;
+
+                return !playerItems ? (
+                  <div className="container mx-auto">0...</div>
+                ) : (
                   <tr key={blueTeamId} className="bg-blue-50">
                     <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
                       <div className="w-auto flex flex-wrap">
@@ -233,9 +242,16 @@ const GamePage = () => {
                       </div>
                     </td>
 
-                    <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
-                      <div className="sm:flex  flex-col">
-                        {blueTeam.currentHealth}/{blueTeam.maxHealth}
+                    <td className="sm:p-3 py-2 px-1 border border-gray-300 ">
+                      <div className="w-full rounded-md bg-gray-300">
+                        <div
+                          className="sm:flex flex-col rounded-md border border-gray-200 bg-green-500 text-xs"
+                          style={{ width: `${healthBar}%` }}
+                        >
+                          <div className="p-2 rounded-md">
+                            {blueTeam.currentHealth}/{blueTeam.maxHealth}
+                          </div>
+                        </div>
                       </div>
                     </td>
                     <td className="sm:p-3 py-2 px-1 text-right border border-gray-300 dark:border-gray-800 ">
@@ -248,7 +264,7 @@ const GamePage = () => {
                             src={`https://ddragon.leagueoflegends.com/cdn/11.3.1/img/champion/${blueTeamComp[blueTeamId].championId}.png`}
                             className="rounded-full w-12 h-12 m-auto"
                           />
-                          <h2 className="absolute bottom-3 left-2 m-auto bg-blue-100 rounded-full border border-gray-300">
+                          <h2 className="absolute bottom-10 left-2 m-auto bg-blue-100 rounded-full border border-gray-300">
                             {blueTeam.level}
                           </h2>
                         </div>
@@ -267,6 +283,14 @@ const GamePage = () => {
                             <img src={gold} alt="Gold" className="w-4 mr-2" />
                             {blueTeam.totalGold}
                           </span>
+                          <span className="flex">
+                            <img
+                              src={percent}
+                              alt="Damage Share"
+                              className="w-4 mr-2"
+                            />
+                            {blueDamage.toString().slice(0, 4)}%
+                          </span>
                         </div>
                       </div>
                     </td>
@@ -280,9 +304,13 @@ const GamePage = () => {
           <table className=" text-left">
             <tbody className="text-gray-600 dark:text-gray-100">
               {redTeamPlayersStats.map((redTeam, redTeamId) => {
+                const healthBar =
+                  (redTeam.currentHealth / redTeam.maxHealth) * 100;
+                const redDamage =
+                  playerItems[redTeamId + 5].championDamageShare * 100;
                 return (
                   <tr key={redTeamId} className="bg-red-50">
-                    <td className="sm:p-3 py-2 px-1 text-right border border-gray-300 dark:border-gray-800 ">
+                    <td className="sm:p-3 py-2 px-1 text-right border border-gray-300 justify-end dark:border-gray-800 ">
                       <h2 className="text-center p-2">
                         {redTeamComp[redTeamId].summonerName}
                       </h2>
@@ -304,17 +332,22 @@ const GamePage = () => {
                             {redTeam.totalGold}{" "}
                             <img src={gold} alt="Gold" className="w-4 ml-2" />
                           </span>
+                          <span className="flex">
+                            {redDamage.toString().slice(0, 4)}%
+                            <img
+                              src={percent}
+                              alt="Damage Share"
+                              className="w-4 ml-2"
+                            />
+                          </span>
                         </div>
 
-                        <div
-                          className="px-3 w-auto h-auto relative"
-                          // className="px-3 w-24 h-24 relative"
-                        >
+                        <div className="px-3 w-auto h-auto relative">
                           <img
                             src={`https://ddragon.leagueoflegends.com/cdn/11.3.1/img/champion/${redTeamComp[redTeamId].championId}.png`}
                             className="rounded-full w-12 h-12 m-auto"
                           />
-                          <h2 className="absolute bottom-3 right-2 m-auto bg-red-100 rounded-full border border-gray-300">
+                          <h2 className="absolute bottom-10 right-2 m-auto bg-red-100 rounded-full border border-gray-300">
                             {redTeam.level}
                           </h2>
                         </div>
@@ -322,8 +355,15 @@ const GamePage = () => {
                     </td>
 
                     <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
-                      <div className="sm:flex  flex-col">
-                        {redTeam.currentHealth}/{redTeam.maxHealth}
+                      <div className="w-full  rounded-md bg-gray-300">
+                        <div
+                          className="sm:flex flex-col rounded-md border border-gray-200 text-xs transition duration-500 ease-in-out bg-green-500 "
+                          style={{ width: `${healthBar}%` }}
+                        >
+                          <div className="p-2 rounded-md">
+                            {redTeam.currentHealth}/{redTeam.maxHealth}
+                          </div>
+                        </div>
                       </div>
                     </td>
 
