@@ -17,6 +17,7 @@ const GamePage = () => {
 
   const [logSeconds, setSeconds] = useState(0);
   const [isLoading, setLoading] = useState(true);
+  const [isLoadingItems, setLoadingItems] = useState(true);
 
   const [gameState, setGameState] = useState([]);
 
@@ -42,7 +43,7 @@ const GamePage = () => {
         }
       }
       functionSeconds();
-    }, 10000);
+    }, 800);
     return () => clearInterval(timer);
   });
 
@@ -62,50 +63,56 @@ const GamePage = () => {
         ? "0".substring(0, 1).padEnd(2, "0")
         : time.getUTCSeconds().toString().substring(0, 1).padEnd(2, "0");
 
-    const fetchGame = async () => {
-      const response = await fetch(
-        `https://feed.lolesports.com/livestats/v1/window/${linkDetails}?startingTime=${year}-${month}-${days}T${hours}:${minutes}:${seconds}.00Z`
-      );
-      const game = await response.json();
-      const blueTeamComp =
-        game.gameMetadata.blueTeamMetadata.participantMetadata;
-      const redTeamComp = game.gameMetadata.redTeamMetadata.participantMetadata;
-      setBlueTeamComp(blueTeamComp);
-      setRedTeamComp(redTeamComp);
-      const gameState = game.frames[9].gameState;
-      setGameState(gameState);
-      const blueTeamStats = game.frames[9].blueTeam;
-      const redTeamStats = game.frames[9].redTeam;
-      setBlueTeamStats(blueTeamStats);
-      setRedTeamStats(redTeamStats);
-      const blueTeamPlayersStats = game.frames[9].blueTeam.participants;
-      const redTeamPlayersStats = game.frames[9].redTeam.participants;
-      setblueTeamPlayersStats(blueTeamPlayersStats);
-      setredTeamPlayersStats(redTeamPlayersStats);
-      const eventDetails = game.esportsMatchId;
+    if (time.getUTCSeconds().toString().slice(-1) === "0") {
+      const fetchGame = async () => {
+        const response = await fetch(
+          `https://feed.lolesports.com/livestats/v1/window/${linkDetails}?startingTime=${year}-${month}-${days}T${hours}:${minutes}:${seconds}.00Z`
+        );
+        const game = await response.json();
 
-      setEventDetails(eventDetails);
-    };
+        const blueTeamComp =
+          game.gameMetadata.blueTeamMetadata.participantMetadata;
+        const redTeamComp =
+          game.gameMetadata.redTeamMetadata.participantMetadata;
+        setBlueTeamComp(blueTeamComp);
+        setRedTeamComp(redTeamComp);
+        const gameState = game.frames[9].gameState;
+        setGameState(gameState);
+        const blueTeamStats = game.frames[9].blueTeam;
+        const redTeamStats = game.frames[9].redTeam;
+        setBlueTeamStats(blueTeamStats);
+        setRedTeamStats(redTeamStats);
+        const blueTeamPlayersStats = game.frames[9].blueTeam.participants;
+        const redTeamPlayersStats = game.frames[9].redTeam.participants;
+        setblueTeamPlayersStats(blueTeamPlayersStats);
+        setredTeamPlayersStats(redTeamPlayersStats);
+        const eventDetails = game.esportsMatchId;
 
-    const fetchItems = async () => {
-      const response = await fetch(
-        `https://feed.lolesports.com/livestats/v1/details/${linkDetails}?startingTime=${year}-${month}-${days}T${hours}:${minutes}:${seconds}.00Z`
-      );
-      const game = await response.json();
-      const playerItems = game.frames[9].participants;
-      setPlayerItems(playerItems);
-      setLoading(false);
-    };
+        setEventDetails(eventDetails);
+        setLoading(false);
+      };
 
-    fetchGame();
-    fetchItems();
+      const fetchItems = async () => {
+        const response = await fetch(
+          `https://feed.lolesports.com/livestats/v1/details/${linkDetails}?startingTime=${year}-${month}-${days}T${hours}:${minutes}:${seconds}.00Z`
+        );
+        const game = await response.json();
+        const playerItems = game.frames[9].participants;
+        setPlayerItems(playerItems);
+        setLoadingItems(false);
+      };
+
+      fetchGame();
+      fetchItems();
+    } else {
+    }
   }, [logSeconds]);
 
   return isLoading ? (
-    <div className="container mx-auto">Carregando...</div>
+    <div className="container w-full w-min-full mx-auto">Carregando...</div>
   ) : (
     <>
-      <table className="w-full text-center">
+      <table className="w-full min-w-full text-center">
         <thead>
           <tr className="text-gray-400">
             <th className="font-normal p-3  border border-gray-300 dark:border-gray-800">
@@ -115,7 +122,7 @@ const GamePage = () => {
                 </h2>
               ) : (
                 <h2 className="bg-green-500 text-white m-auto w-24  h-auto p-3 rounded-lg">
-                  Finished
+                  {gameState}
                 </h2>
               )}
             </th>
@@ -146,7 +153,7 @@ const GamePage = () => {
               <BlueTeamHeader eventDetails={eventDetails} />
             </td>
 
-            <td className="sm:p-3 py-2 px-1 bg-blue-50 border border-gray-300 dark:border-gray-800">
+            <td className="sm:p-3 py-2 px-1  bg-blue-50 border border-gray-300 dark:border-gray-800">
               {blueTeamStats.totalGold}
             </td>
             <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
@@ -212,7 +219,7 @@ const GamePage = () => {
           </tr>
         </tbody>
       </table>
-      <div className=" flex m-auto ">
+      <div className=" flex m-auto min-w-full ">
         <div>
           <table className=" text-left">
             <tbody className="text-gray-600 dark:text-gray-100">
@@ -227,7 +234,7 @@ const GamePage = () => {
                   <div className="container mx-auto">0...</div>
                 ) : (
                   <tr key={blueTeamId} className="bg-blue-50">
-                    <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
+                    <td className="sm:p-3 py-2 px-1 w-52 border border-gray-300 dark:border-gray-800">
                       <div className="w-auto flex flex-wrap">
                         {playerItems[blueTeamId].items.map((value, id) => {
                           return (
@@ -245,7 +252,7 @@ const GamePage = () => {
                     <td className="sm:p-3 py-2 px-1 border border-gray-300 ">
                       <div className="w-full rounded-md bg-gray-300">
                         <div
-                          className="sm:flex flex-col rounded-md border border-gray-200 bg-green-500 text-xs"
+                          className="flex-col rounded-md border border-gray-200 bg-green-500 text-xs"
                           style={{ width: `${healthBar}%` }}
                         >
                           <div className="p-2 rounded-md">
@@ -254,7 +261,7 @@ const GamePage = () => {
                         </div>
                       </div>
                     </td>
-                    <td className="sm:p-3 py-2 px-1 text-right border border-gray-300 dark:border-gray-800 ">
+                    <td className="sm:p-3 py-2 px-1 w-48 text-right border border-gray-300 dark:border-gray-800 ">
                       <h2 className="text-center p-2">
                         {blueTeamComp[blueTeamId].summonerName}
                       </h2>
@@ -367,7 +374,7 @@ const GamePage = () => {
                       </div>
                     </td>
 
-                    <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
+                    <td className="sm:p-3 py-2 px-1  w-52  border border-gray-300 dark:border-gray-800">
                       <div className="flex flex-wrap">
                         {playerItems[redTeamId + 5].items.map((value, id) => {
                           return (
