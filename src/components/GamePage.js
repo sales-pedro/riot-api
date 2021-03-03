@@ -232,9 +232,7 @@ const GamePage = () => {
                   playerItems[blueTeamId].championDamageShare * 100;
                   */
 
-                return !playerItems ? (
-                  <div className="container mx-auto">0...</div>
-                ) : (
+                return (
                   <tr key={blueTeamId} className="bg-blue-50">
                     <td className="sm:p-3 py-2 px-1 w-52 border border-gray-300 dark:border-gray-800">
                       <div className="w-auto flex flex-wrap">
