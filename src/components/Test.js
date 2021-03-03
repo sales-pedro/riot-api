@@ -7,6 +7,7 @@ import tower from "./icons/tower.svg";
 import baron from "./icons/baron.svg";
 import kills from "./icons/kills.svg";
 import cs from "./icons/cs.svg";
+//import percent from "./icons/percent.svg";
 
 import BlueTeamHeader from "./BlueTeamHeader";
 import RedTeamHeader from "./RedTeamHeader";
@@ -16,6 +17,7 @@ const Test = () => {
 
   const [logSeconds, setSeconds] = useState(0);
   const [isLoading, setLoading] = useState(true);
+  const [isLoadingItems, setLoadingItems] = useState(true);
 
   const [gameState, setGameState] = useState([]);
 
@@ -23,6 +25,8 @@ const Test = () => {
   const [redTeamPlayersStats, setredTeamPlayersStats] = useState([]);
   const [blueTeamStats, setBlueTeamStats] = useState([]);
   const [redTeamStats, setRedTeamStats] = useState([]);
+
+  const [playerItems, setPlayerItems] = useState([]);
 
   const [eventDetails, setEventDetails] = useState();
   const [blueTeamComp, setBlueTeamComp] = useState([]);
@@ -39,7 +43,7 @@ const Test = () => {
         }
       }
       functionSeconds();
-    }, 10000);
+    }, 800);
     return () => clearInterval(timer);
   });
 
@@ -59,40 +63,56 @@ const Test = () => {
         ? "0".substring(0, 1).padEnd(2, "0")
         : time.getUTCSeconds().toString().substring(0, 1).padEnd(2, "0");
 
-    const fetchGame = async () => {
-      const response = await fetch(
-        `https://feed.lolesports.com/livestats/v1/window/${linkDetails}?startingTime=${year}-${month}-${days}T${hours}:${minutes}:${seconds}.00Z`
-      );
-      const game = await response.json();
-      const blueTeamComp =
-        game.gameMetadata.blueTeamMetadata.participantMetadata;
-      const redTeamComp = game.gameMetadata.redTeamMetadata.participantMetadata;
-      setBlueTeamComp(blueTeamComp);
-      setRedTeamComp(redTeamComp);
-      const gameState = game.frames[9].gameState;
-      setGameState(gameState);
-      const blueTeamStats = game.frames[9].blueTeam;
-      const redTeamStats = game.frames[9].redTeam;
-      setBlueTeamStats(blueTeamStats);
-      setRedTeamStats(redTeamStats);
-      const blueTeamPlayersStats = game.frames[9].blueTeam.participants;
-      const redTeamPlayersStats = game.frames[9].redTeam.participants;
-      setblueTeamPlayersStats(blueTeamPlayersStats);
-      setredTeamPlayersStats(redTeamPlayersStats);
-      const eventDetails = game.esportsMatchId;
+    if (time.getUTCSeconds().toString().slice(-1) === "0") {
+      const fetchItems = async () => {
+        const response = await fetch(
+          `https://feed.lolesports.com/livestats/v1/details/${linkDetails}?startingTime=${year}-${month}-${days}T${hours}:${minutes}:${seconds}.00Z`
+        );
+        const game = await response.json();
+        const playerItems = game.frames[9].participants;
+        setPlayerItems(playerItems);
+        setLoadingItems(false);
+      };
 
-      setEventDetails(eventDetails);
-      setLoading(false);
-    };
+      const fetchGame = async () => {
+        const response = await fetch(
+          `https://feed.lolesports.com/livestats/v1/window/${linkDetails}?startingTime=${year}-${month}-${days}T${hours}:${minutes}:${seconds}.00Z`
+        );
+        const game = await response.json();
 
-    fetchGame();
+        const blueTeamComp =
+          game.gameMetadata.blueTeamMetadata.participantMetadata;
+        const redTeamComp =
+          game.gameMetadata.redTeamMetadata.participantMetadata;
+        setBlueTeamComp(blueTeamComp);
+        setRedTeamComp(redTeamComp);
+        const gameState = game.frames[9].gameState;
+        setGameState(gameState);
+        const blueTeamStats = game.frames[9].blueTeam;
+        const redTeamStats = game.frames[9].redTeam;
+        setBlueTeamStats(blueTeamStats);
+        setRedTeamStats(redTeamStats);
+        const blueTeamPlayersStats = game.frames[9].blueTeam.participants;
+        const redTeamPlayersStats = game.frames[9].redTeam.participants;
+        setblueTeamPlayersStats(blueTeamPlayersStats);
+        setredTeamPlayersStats(redTeamPlayersStats);
+        const eventDetails = game.esportsMatchId;
+
+        setEventDetails(eventDetails);
+        setLoading(false);
+      };
+
+      fetchGame();
+      fetchItems();
+    } else {
+    }
   }, [logSeconds]);
 
   return isLoading ? (
-    <div className="container mx-auto">Carregando...</div>
+    <div className="container w-full w-min-full mx-auto">Carregando...</div>
   ) : (
     <>
-      <table className="w-full text-center">
+      <table className="w-full min-w-full text-center">
         <thead>
           <tr className="text-gray-400">
             <th className="font-normal p-3  border border-gray-300 dark:border-gray-800">
@@ -102,7 +122,7 @@ const Test = () => {
                 </h2>
               ) : (
                 <h2 className="bg-green-500 text-white m-auto w-24  h-auto p-3 rounded-lg">
-                  Finished
+                  {gameState}
                 </h2>
               )}
             </th>
@@ -133,7 +153,7 @@ const Test = () => {
               <BlueTeamHeader eventDetails={eventDetails} />
             </td>
 
-            <td className="sm:p-3 py-2 px-1 bg-blue-50 border border-gray-300 dark:border-gray-800">
+            <td className="sm:p-3 py-2 px-1  bg-blue-50 border border-gray-300 dark:border-gray-800">
               {blueTeamStats.totalGold}
             </td>
             <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
@@ -199,19 +219,51 @@ const Test = () => {
           </tr>
         </tbody>
       </table>
-      <div className=" flex m-auto ">
+      <div className=" flex m-auto min-w-full ">
         <div>
           <table className=" text-left">
             <tbody className="text-gray-600 dark:text-gray-100">
               {blueTeamPlayersStats.map((blueTeam, blueTeamId) => {
-                return (
+                const healthBar =
+                  (blueTeam.currentHealth / blueTeam.maxHealth) * 100;
+
+                /*
+                const blueDamage =
+                  playerItems[blueTeamId].championDamageShare * 100;
+                  */
+
+                return !playerItems ? (
+                  <div className="container mx-auto">0...</div>
+                ) : (
                   <tr key={blueTeamId} className="bg-blue-50">
-                    <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
-                      <div className="sm:flex  flex-col">
-                        {blueTeam.currentHealth}/{blueTeam.maxHealth}
+                    <td className="sm:p-3 py-2 px-1 w-52 border border-gray-300 dark:border-gray-800">
+                      <div className="w-auto flex flex-wrap">
+                        {playerItems[blueTeamId].items.map((value, id) => {
+                          return (
+                            <div key={id} className="m-1 ">
+                              <img
+                                src={`https://ddragon.leagueoflegends.com/cdn/11.4.1/img/item/${value}.png`}
+                                className="w-8 h-8"
+                              />
+                            </div>
+                          );
+                        })}
                       </div>
                     </td>
-                    <td className="sm:p-3 py-2 px-1 text-right border border-gray-300 dark:border-gray-800 ">
+
+                    <td className="sm:p-3 py-2 px-1 border border-gray-300 ">
+                      <div className="w-full rounded-md bg-gray-300">
+                        <div
+                          className="flex-col rounded-md border border-gray-200 bg-green-500 text-xs"
+                          style={{ width: `${healthBar}%` }}
+                        >
+                          <div className="p-2 rounded-md">
+                            {blueTeam.currentHealth}/{blueTeam.maxHealth}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="sm:p-3 py-2 px-1 w-48 text-right border border-gray-300 dark:border-gray-800 ">
                       <h2 className="text-center p-2">
                         {blueTeamComp[blueTeamId].summonerName}
                       </h2>
@@ -221,7 +273,7 @@ const Test = () => {
                             src={`https://ddragon.leagueoflegends.com/cdn/11.3.1/img/champion/${blueTeamComp[blueTeamId].championId}.png`}
                             className="rounded-full w-12 h-12 m-auto"
                           />
-                          <h2 className="absolute bottom-3 left-2 m-auto bg-blue-100 rounded-full border border-gray-300">
+                          <h2 className="absolute bottom-10 left-2 m-auto bg-blue-100 rounded-full border border-gray-300">
                             {blueTeam.level}
                           </h2>
                         </div>
@@ -253,9 +305,15 @@ const Test = () => {
           <table className=" text-left">
             <tbody className="text-gray-600 dark:text-gray-100">
               {redTeamPlayersStats.map((redTeam, redTeamId) => {
+                const healthBar =
+                  (redTeam.currentHealth / redTeam.maxHealth) * 100;
+                /*
+                const redDamage =
+                  playerItems[redTeamId + 5].championDamageShare * 100;
+                  */
                 return (
                   <tr key={redTeamId} className="bg-red-50">
-                    <td className="sm:p-3 py-2 px-1 text-right border border-gray-300 dark:border-gray-800 ">
+                    <td className="sm:p-3 py-2 px-1 text-right border border-gray-300 justify-end dark:border-gray-800 ">
                       <h2 className="text-center p-2">
                         {redTeamComp[redTeamId].summonerName}
                       </h2>
@@ -263,11 +321,15 @@ const Test = () => {
                         <div>
                           <span className="flex">
                             {redTeam.kills}/{redTeam.deaths}/{redTeam.assists}{" "}
-                            <img src={kills} alt="Gold" className="w-4 ml-2" />
+                            <img src={kills} alt="KDA" className="w-4 ml-2" />
                           </span>
                           <span className="flex">
                             {redTeam.creepScore}{" "}
-                            <img src={cs} alt="Gold" className="w-4 ml-2" />
+                            <img
+                              src={cs}
+                              alt="Creep Score"
+                              className="w-4 ml-2"
+                            />
                           </span>
                           <span className="flex">
                             {redTeam.totalGold}{" "}
@@ -280,7 +342,7 @@ const Test = () => {
                             src={`https://ddragon.leagueoflegends.com/cdn/11.3.1/img/champion/${redTeamComp[redTeamId].championId}.png`}
                             className="rounded-full w-12 h-12 m-auto"
                           />
-                          <h2 className="absolute bottom-3 right-2 m-auto bg-red-100 rounded-full border border-gray-300">
+                          <h2 className="absolute bottom-10 right-2 m-auto bg-red-100 rounded-full border border-gray-300">
                             {redTeam.level}
                           </h2>
                         </div>
@@ -288,8 +350,30 @@ const Test = () => {
                     </td>
 
                     <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
-                      <div className="sm:flex  flex-col">
-                        {redTeam.currentHealth}/{redTeam.maxHealth}
+                      <div className="w-full  rounded-md bg-gray-300">
+                        <div
+                          className="sm:flex flex-col rounded-md border border-gray-200 text-xs transition duration-500 ease-in-out bg-green-500 "
+                          style={{ width: `${healthBar}%` }}
+                        >
+                          <div className="p-2 rounded-md">
+                            {redTeam.currentHealth}/{redTeam.maxHealth}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td className="sm:p-3 py-2 px-1  w-52  border border-gray-300 dark:border-gray-800">
+                      <div className="flex flex-wrap">
+                        {playerItems[redTeamId + 5].items.map((value, id) => {
+                          return (
+                            <div key={id} className="m-1  ">
+                              <img
+                                src={`https://ddragon.leagueoflegends.com/cdn/11.4.1/img/item/${value}.png`}
+                                className="w-8 h-8"
+                              />
+                            </div>
+                          );
+                        })}
                       </div>
                     </td>
                   </tr>
