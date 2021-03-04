@@ -7,7 +7,7 @@ import tower from "./icons/tower.svg";
 import baron from "./icons/baron.svg";
 import kills from "./icons/kills.svg";
 import cs from "./icons/cs.svg";
-//import percent from "./icons/percent.svg";
+import percent from "./icons/percent.svg";
 
 import BlueTeamHeader from "./BlueTeamHeader";
 import RedTeamHeader from "./RedTeamHeader";
@@ -64,17 +64,13 @@ const GamePage = () => {
         : time.getUTCSeconds().toString().substring(0, 1).padEnd(2, "0");
 
     if (time.getUTCSeconds().toString().slice(-1) === "0") {
-      const fetchItems = async () => {
-        const response = await fetch(
+      const fetchGame = async () => {
+        const items = await fetch(
           `https://feed.lolesports.com/livestats/v1/details/${linkDetails}?startingTime=${year}-${month}-${days}T${hours}:${minutes}:${seconds}.00Z`
         );
-        const game = await response.json();
-        const playerItems = game.frames[9].participants;
+        const gameItems = await items.json();
+        const playerItems = gameItems.frames[9].participants;
         setPlayerItems(playerItems);
-        setLoadingItems(false);
-      };
-
-      const fetchGame = async () => {
         const response = await fetch(
           `https://feed.lolesports.com/livestats/v1/window/${linkDetails}?startingTime=${year}-${month}-${days}T${hours}:${minutes}:${seconds}.00Z`
         );
@@ -103,7 +99,6 @@ const GamePage = () => {
       };
 
       fetchGame();
-      fetchItems();
     } else {
     }
   }, [logSeconds]);
@@ -227,10 +222,8 @@ const GamePage = () => {
                 const healthBar =
                   (blueTeam.currentHealth / blueTeam.maxHealth) * 100;
 
-                /*
                 const blueDamage =
                   playerItems[blueTeamId].championDamageShare * 100;
-                  */
 
                 return (
                   <tr key={blueTeamId} className="bg-blue-50">
@@ -290,6 +283,14 @@ const GamePage = () => {
                             <img src={gold} alt="Gold" className="w-4 mr-2" />
                             {blueTeam.totalGold}
                           </span>
+                          <span className="flex">
+                            <img
+                              src={percent}
+                              alt="Damage Share"
+                              className="w-4 mr-2"
+                            />
+                            {blueDamage.toString().slice(0, 4)}%
+                          </span>
                         </div>
                       </div>
                     </td>
@@ -305,10 +306,10 @@ const GamePage = () => {
               {redTeamPlayersStats.map((redTeam, redTeamId) => {
                 const healthBar =
                   (redTeam.currentHealth / redTeam.maxHealth) * 100;
-                /*
+
                 const redDamage =
                   playerItems[redTeamId + 5].championDamageShare * 100;
-                  */
+
                 return (
                   <tr key={redTeamId} className="bg-red-50">
                     <td className="sm:p-3 py-2 px-1 text-right border border-gray-300 justify-end dark:border-gray-800 ">
@@ -332,6 +333,14 @@ const GamePage = () => {
                           <span className="flex">
                             {redTeam.totalGold}{" "}
                             <img src={gold} alt="Gold" className="w-4 ml-2" />
+                          </span>
+                          <span className="flex">
+                            {redDamage.toString().slice(0, 4)}%
+                            <img
+                              src={percent}
+                              alt="Damage Share"
+                              className="w-4 ml-2"
+                            />
                           </span>
                         </div>
 
