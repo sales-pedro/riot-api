@@ -21,7 +21,7 @@ export default function Home() {
   return (
     <UserProvider>
       <BrowserRouter>
-        <div className="App bg-gray-100 min-h-screen mx-auto">
+        <div className="App bg-gray-700 min-h-screen mx-auto text-gray-300">
           <Header />
           <Switch>
             <AuthRoute exact path="/" component={GamesList} />
