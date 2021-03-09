@@ -34,13 +34,8 @@ const Test = () => {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      //setSeconds(logSeconds + 1);
       function functionSeconds() {
-        if (logSeconds < 5) {
-          setSeconds(logSeconds + 1);
-        } else {
-          setSeconds(0);
-        }
+        setSeconds(logSeconds + 1);
       }
       functionSeconds();
     }, 800);
@@ -53,6 +48,7 @@ const Test = () => {
 
   useEffect(() => {
     const time = DateOffset(-21000);
+    console.log("time", time);
     const year = time.getFullYear().toString();
     const month = (time.getMonth() + 1).toString().padStart(2, "0");
     const days = time.getUTCDate().toString().padStart(2, "0");
@@ -106,64 +102,64 @@ const Test = () => {
   return isLoading ? (
     <div className="container w-full w-min-full mx-auto">Carregando...</div>
   ) : (
-    <>
+    <div className="w-9/12 min-w-max text-xs">
       <table className="w-full min-w-full text-center">
         <thead>
           <tr className="text-gray-400">
-            <th className="font-normal p-3  border border-gray-300 dark:border-gray-800">
+            <th className="font-normal p-2  border border-gray-500">
               {gameState === "in_game" ? (
-                <h2 className="bg-red-500 text-white m-auto w-16 h-auto p-3 rounded-lg">
-                  Live
+                <h2 className="bg-red-500 text-white m-auto w-16 h-auto p-2 rounded-lg">
+                  LIVE
                 </h2>
               ) : (
-                <h2 className="bg-green-500 text-white m-auto w-24  h-auto p-3 rounded-lg">
-                  {gameState}
+                <h2 className="bg-green-500 text-white m-auto w-24  h-auto p-2 rounded-lg">
+                  {gameState.toUpperCase()}
                 </h2>
               )}
             </th>
 
-            <th className="font-normal p-3   border border-gray-300 dark:border-gray-800">
-              <img src={gold} alt="Golds" className="w-6 m-auto" />
+            <th className="font-normal p-2   border border-gray-500">
+              <img src={gold} alt="Golds" className="w-4 m-auto" />
             </th>
-            <th className="font-normal p-3   border border-gray-300 dark:border-gray-800">
-              <img src={inhibitor} alt="Inhibitors" className="w-6 m-auto" />
+            <th className="font-normal p-2   border border-gray-500">
+              <img src={inhibitor} alt="Inhibitors" className="w-4 m-auto" />
             </th>
-            <th className="font-normal p-3   border border-gray-300 dark:border-gray-800">
-              <img src={tower} alt="Towers" className="w-6 m-auto " />
+            <th className="font-normal p-2   border border-gray-500">
+              <img src={tower} alt="Towers" className="w-4 m-auto " />
             </th>
-            <th className="font-normal p-3 border border-gray-300 dark:border-gray-800">
-              <img src={baron} alt="Barons" className="w-6 m-auto " />
+            <th className="font-normal p-2 border border-gray-500">
+              <img src={baron} alt="Barons" className="w-4 m-auto " />
             </th>
-            <th className="font-normal p-3  border border-gray-300 dark:border-gray-800 ">
-              <img src={kills} alt="Kills" className="w-6 m-auto " />
+            <th className="font-normal p-2  border border-gray-500 ">
+              <img src={kills} alt="Kills" className="w-4 m-auto " />
             </th>
-            <th className="font-normal p-3   border border-gray-300 dark:border-gray-800">
+            <th className="font-normal p-2   border border-gray-500">
               Dragons
             </th>
           </tr>
         </thead>
-        <tbody className="text-gray-600 dark:text-gray-100">
-          <tr className="bg-blue-50">
-            <td className="sm:p-3 py-2 px-1 bg-blue-100 border border-gray-300 dark:border-gray-800">
+        <tbody className="text-gray-100 ">
+          <tr className="bg-blue-900">
+            <td className=" py-2 px-1">
               <BlueTeamHeader eventDetails={eventDetails} />
             </td>
 
-            <td className="sm:p-3 py-2 px-1  bg-blue-50 border border-gray-300 dark:border-gray-800">
+            <td className=" py-2 px-1   border border-gray-500">
               {blueTeamStats.totalGold}
             </td>
-            <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
+            <td className=" py-2 px-1 border border-gray-500">
               {blueTeamStats.inhibitors}
             </td>
-            <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800 md:table-cell ">
+            <td className=" py-2 px-1 border border-gray-500 ">
               {blueTeamStats.towers}
             </td>
-            <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800 ">
+            <td className=" py-2 px-1 border border-gray-500 ">
               <h2>{blueTeamStats.barons}</h2>
             </td>
-            <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
+            <td className=" py-2 px-1 border border-gray-500">
               {blueTeamStats.totalKills}
             </td>
-            <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
+            <td className=" py-2 px-1 border border-gray-500">
               <div className="flex items-center">
                 {blueTeamStats.dragons.map((dragons, dragonsId) => {
                   return (
@@ -178,27 +174,27 @@ const Test = () => {
             </td>
           </tr>
 
-          <tr className="bg-red-50">
-            <td className="sm:p-3 py-2 px-1 bg-red-100 border border-gray-300 dark:border-gray-800">
+          <tr className="bg-red-900 text-gray-200">
+            <td className=" py-2 px-1  border border-gray-500">
               <RedTeamHeader eventDetails={eventDetails} />
             </td>
 
-            <td className="sm:p-3 py-2 px-1 bg-red-50 border border-gray-300 dark:border-gray-800">
+            <td className=" py-2 px-1  border border-gray-500">
               {redTeamStats.totalGold}
             </td>
-            <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
+            <td className=" py-2 px-1 border border-gray-500">
               {redTeamStats.inhibitors}
             </td>
-            <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800 md:table-cell ">
+            <td className=" py-2 px-1 border border-gray-500 ">
               {redTeamStats.towers}
             </td>
-            <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800 ">
+            <td className=" py-2 px-1 border border-gray-500 ">
               {redTeamStats.barons}
             </td>
-            <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
+            <td className=" py-2 px-1 border border-gray-500">
               {redTeamStats.totalKills}
             </td>
-            <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
+            <td className=" py-2 px-1 border border-gray-500">
               <div className="flex items-center">
                 {redTeamStats.dragons.map((dragons, dragonsId) => {
                   return (
@@ -214,10 +210,10 @@ const Test = () => {
           </tr>
         </tbody>
       </table>
-      <div className=" flex m-auto min-w-full ">
+      <div className=" md:flex m-auto min-w-full ">
         <div>
-          <table className=" text-left">
-            <tbody className="text-gray-600 dark:text-gray-100">
+          <table className="text-left">
+            <tbody className="text-gray-200">
               {blueTeamPlayersStats.map((blueTeam, blueTeamId) => {
                 const healthBar =
                   (blueTeam.currentHealth / blueTeam.maxHealth) * 100;
@@ -226,8 +222,11 @@ const Test = () => {
                   playerItems[blueTeamId].championDamageShare * 100;
 
                 return (
-                  <tr key={blueTeamId} className="bg-blue-50">
-                    <td className="sm:p-3 py-2 px-1 w-52 border border-gray-300 dark:border-gray-800">
+                  <tr
+                    key={blueTeamId}
+                    className="bg-gradient-to-l from-blue-900 via-gray-800 to-gray-700"
+                  >
+                    <td className=" py-2 px-1 w-52 border border-gray-500">
                       <div className="w-auto flex flex-wrap">
                         {playerItems[blueTeamId].items.map((value, id) => {
                           return (
@@ -242,10 +241,10 @@ const Test = () => {
                       </div>
                     </td>
 
-                    <td className="sm:p-3 py-2 px-1 border border-gray-300 ">
+                    <td className=" py-2 px-1 border border-gray-500 ">
                       <div className="w-full rounded-md bg-gray-300">
                         <div
-                          className="flex-col rounded-md border border-gray-200 bg-green-500 text-xs"
+                          className="flex-col rounded-md text-gray-500 bg-green-500"
                           style={{ width: `${healthBar}%` }}
                         >
                           <div className="p-2 rounded-md">
@@ -254,7 +253,7 @@ const Test = () => {
                         </div>
                       </div>
                     </td>
-                    <td className="sm:p-3 py-2 px-1 w-48 text-right border border-gray-300 dark:border-gray-800 ">
+                    <td className=" py-2 px-1 w-48 text-right border border-gray-500 ">
                       <h2 className="text-center p-2">
                         {blueTeamComp[blueTeamId].summonerName}
                       </h2>
@@ -264,26 +263,26 @@ const Test = () => {
                             src={`https://ddragon.leagueoflegends.com/cdn/11.3.1/img/champion/${blueTeamComp[blueTeamId].championId}.png`}
                             className="rounded-full w-12 h-12 m-auto"
                           />
-                          <h2 className="absolute bottom-10 left-2 m-auto bg-blue-100 rounded-full border border-gray-300">
+                          <h2 className="absolute bottom-7 left-4 m-auto bg-blue-900 rounded-full border border-gray-500">
                             {blueTeam.level}
                           </h2>
                         </div>
 
                         <div>
-                          <span className="flex">
+                          <span className="flex leading-5">
                             <img src={kills} alt="Gold" className="w-4 mr-2" />
                             {blueTeam.kills}/{blueTeam.deaths}/
                             {blueTeam.assists}
                           </span>
-                          <span className="flex">
+                          <span className="flex leading-5">
                             <img src={cs} alt="Gold" className="w-4 mr-2" />
                             {blueTeam.creepScore}
                           </span>
-                          <span className="flex">
+                          <span className="flex leading-5">
                             <img src={gold} alt="Gold" className="w-4 mr-2" />
                             {blueTeam.totalGold}
                           </span>
-                          <span className="flex">
+                          <span className="flex leading-5">
                             <img
                               src={percent}
                               alt="Damage Share"
@@ -302,7 +301,7 @@ const Test = () => {
         </div>
         <div>
           <table className=" text-left">
-            <tbody className="text-gray-600 dark:text-gray-100">
+            <tbody className="text-gray-300 ">
               {redTeamPlayersStats.map((redTeam, redTeamId) => {
                 const healthBar =
                   (redTeam.currentHealth / redTeam.maxHealth) * 100;
@@ -311,18 +310,21 @@ const Test = () => {
                   playerItems[redTeamId + 5].championDamageShare * 100;
 
                 return (
-                  <tr key={redTeamId} className="bg-red-50">
-                    <td className="sm:p-3 py-2 px-1 text-right border border-gray-300 justify-end dark:border-gray-800 ">
+                  <tr
+                    key={redTeamId}
+                    className="bg-gradient-to-r from-red-900 via-gray-800 to-gray-700"
+                  >
+                    <td className=" py-2 px-1 text-right border border-gray-500">
                       <h2 className="text-center p-2">
                         {redTeamComp[redTeamId].summonerName}
                       </h2>
                       <div className="grid grid-cols-2">
                         <div>
-                          <span className="flex">
+                          <span className="flex leading-5">
                             {redTeam.kills}/{redTeam.deaths}/{redTeam.assists}{" "}
                             <img src={kills} alt="KDA" className="w-4 ml-2" />
                           </span>
-                          <span className="flex">
+                          <span className="flex leading-5">
                             {redTeam.creepScore}{" "}
                             <img
                               src={cs}
@@ -330,11 +332,11 @@ const Test = () => {
                               className="w-4 ml-2"
                             />
                           </span>
-                          <span className="flex">
+                          <span className="flex leading-5">
                             {redTeam.totalGold}{" "}
                             <img src={gold} alt="Gold" className="w-4 ml-2" />
                           </span>
-                          <span className="flex">
+                          <span className="flex leading-5">
                             {redDamage.toString().slice(0, 4)}%
                             <img
                               src={percent}
@@ -349,17 +351,17 @@ const Test = () => {
                             src={`https://ddragon.leagueoflegends.com/cdn/11.3.1/img/champion/${redTeamComp[redTeamId].championId}.png`}
                             className="rounded-full w-12 h-12 m-auto"
                           />
-                          <h2 className="absolute bottom-10 right-2 m-auto bg-red-100 rounded-full border border-gray-300">
+                          <h2 className="absolute bottom-7 right-2 m-auto bg-red-900 text-gray-200 rounded-full border border-gray-500">
                             {redTeam.level}
                           </h2>
                         </div>
                       </div>
                     </td>
 
-                    <td className="sm:p-3 py-2 px-1 border border-gray-300 dark:border-gray-800">
+                    <td className=" py-2 px-1 border border-gray-500">
                       <div className="w-full  rounded-md bg-gray-300">
                         <div
-                          className="sm:flex flex-col rounded-md border border-gray-200 text-xs transition duration-500 ease-in-out bg-green-500 "
+                          className="flex-col rounded-md text-gray-500 bg-green-500"
                           style={{ width: `${healthBar}%` }}
                         >
                           <div className="p-2 rounded-md">
@@ -369,7 +371,7 @@ const Test = () => {
                       </div>
                     </td>
 
-                    <td className="sm:p-3 py-2 px-1  w-52  border border-gray-300 dark:border-gray-800">
+                    <td className=" py-2 px-1  w-52  border border-gray-500">
                       <div className="flex flex-wrap">
                         {playerItems[redTeamId + 5].items.map((value, id) => {
                           return (
@@ -390,7 +392,7 @@ const Test = () => {
           </table>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 export default Test;

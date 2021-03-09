@@ -106,7 +106,7 @@ const GamePage = () => {
   return isLoading ? (
     <div className="container w-full w-min-full mx-auto">Carregando...</div>
   ) : (
-    <div className="w-9/12 min-w-max text-xs">
+    <div className="w-9/12 min-w-max max-w-max text-xs">
       <table className="w-full min-w-full text-center">
         <thead>
           <tr className="text-gray-400">
@@ -267,30 +267,30 @@ const GamePage = () => {
                             src={`https://ddragon.leagueoflegends.com/cdn/11.3.1/img/champion/${blueTeamComp[blueTeamId].championId}.png`}
                             className="rounded-full w-12 h-12 m-auto"
                           />
-                          <h2 className="absolute bottom-7 left-4 m-auto bg-blue-900 rounded-full border border-gray-500">
+                          <h2 className="absolute bottom-7 right-6 m-auto bg-blue-900 text-gray-200 rounded-full border border-gray-500">
                             {blueTeam.level}
                           </h2>
                         </div>
 
                         <div>
-                          <span className="flex leading-5">
-                            <img src={kills} alt="Gold" className="w-4 mr-2" />
+                          <span className="flex justify-evenly leading-5">
+                            <img src={kills} alt="Gold" className="w-4" />
                             {blueTeam.kills}/{blueTeam.deaths}/
                             {blueTeam.assists}
                           </span>
-                          <span className="flex leading-5">
-                            <img src={cs} alt="Gold" className="w-4 mr-2" />
+                          <span className="flex justify-evenly leading-5">
+                            <img src={cs} alt="Gold" className="w-4" />
                             {blueTeam.creepScore}
                           </span>
-                          <span className="flex leading-5">
-                            <img src={gold} alt="Gold" className="w-4 mr-2" />
+                          <span className="flex justify-evenly leading-5">
+                            <img src={gold} alt="Gold" className="w-4" />
                             {blueTeam.totalGold}
                           </span>
-                          <span className="flex leading-5">
+                          <span className="flex justify-evenly leading-5">
                             <img
                               src={percent}
                               alt="Damage Share"
-                              className="w-4 mr-2"
+                              className="w-4"
                             />
                             {blueDamage.toString().slice(0, 4)}%
                           </span>
@@ -324,23 +324,23 @@ const GamePage = () => {
                       </h2>
                       <div className="grid grid-cols-2">
                         <div>
-                          <span className="flex leading-5">
-                            {redTeam.kills}/{redTeam.deaths}/{redTeam.assists}{" "}
+                          <span className="flex justify-evenly leading-5">
+                            {redTeam.kills}/{redTeam.deaths}/{redTeam.assists}
                             <img src={kills} alt="KDA" className="w-4 ml-2" />
                           </span>
-                          <span className="flex leading-5">
-                            {redTeam.creepScore}{" "}
+                          <span className="flex justify-evenly leading-5">
+                            {redTeam.creepScore}
                             <img
                               src={cs}
                               alt="Creep Score"
                               className="w-4 ml-2"
                             />
                           </span>
-                          <span className="flex leading-5">
-                            {redTeam.totalGold}{" "}
+                          <span className="flex justify-evenly leading-5">
+                            {redTeam.totalGold}
                             <img src={gold} alt="Gold" className="w-4 ml-2" />
                           </span>
-                          <span className="flex leading-5">
+                          <span className="flex justify-evenly leading-5">
                             {redDamage.toString().slice(0, 4)}%
                             <img
                               src={percent}
