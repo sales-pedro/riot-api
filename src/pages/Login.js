@@ -29,7 +29,10 @@ function Login(props) {
 
   return (
     <div className="w-72 h-auto m-auto ">
-      Para conseguir seu login entre em contato no discord: koby#7134
+      <h2>Login: contateste@teste.com </h2>
+      <br />
+      <h2>Senha: teste123</h2>
+
       <form className={formClassname} onSubmit={handleSubmit(onSubmit)}>
         <div className="field w-72 py-5">
           <label>
