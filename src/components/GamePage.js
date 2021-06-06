@@ -52,7 +52,7 @@ const GamePage = () => {
   }
 
   useEffect(() => {
-    const time = DateOffset(-52000);
+    const time = DateOffset(-55000);
     const year = time.getFullYear().toString();
     const month = (time.getMonth() + 1).toString().padStart(2, "0");
     const days = time.getUTCDate().toString().padStart(2, "0");
