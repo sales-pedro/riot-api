@@ -28,6 +28,7 @@ const GamesList = () => {
 
       const scheduleGames = games.data.schedule.events;
       setScheduleGames(scheduleGames);
+      console.log(scheduleGames);
       setFetchedGames(scheduleGames);
       setLoading(false);
     };

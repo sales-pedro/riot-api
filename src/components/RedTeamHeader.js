@@ -26,7 +26,7 @@ const RedTeamHeader = ({ eventDetails }) => {
 
   return (
     <>
-      <h2>{redTeam.name}</h2>
+      <h2>{redTeam.code}</h2>
     </>
   );
 };

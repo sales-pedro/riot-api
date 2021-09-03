@@ -25,7 +25,7 @@ export default function Home() {
           <Header />
           <Switch>
             <AuthRoute exact path="/" component={GamesList} />
-            <AuthRoute exact path="/test/:linkDetails" component={Test} />
+            <AuthRoute exact path="/test/:tournamentId" component={Test} />
             <LoginRoute exact path="/login" component={Login} />
             <AuthRoute exact path="/:linkDetails" component={GamePage} />
           </Switch>
